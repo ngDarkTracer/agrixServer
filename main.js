@@ -86,8 +86,31 @@ app.post('/saveAgri', (request, response) => {
     client.query(`INSERT INTO "LL"."agriculteur" (nom, sexe, age, telephone, wha, email, agrix, biographie, source)
         VALUES ('${nom}', '${sexe}', ${age}, '${telephone}', '${whatsapp}', '${email}', '${agrix}', '${biographie}', '${source}')`, (err, res) => {
         if (res) {
-            console.log('success')
             response.end('agri saved successfully')
+        } else {
+            response.end(err)
+        }
+    })
+})
+
+app.post('/saveProject', (request, response) => {
+
+    nom = request.body.nom
+    etat = request.body.etat
+    pays = request.body.pays
+    region = request.body.region
+    superficie = request.body.superficie
+    localisation = request.body.localisation
+    datecontact = new Date(request.body.datecontact).toLocaleDateString('en-GB').split('/').reverse().join('')
+    datesemis = new Date(request.body.datesemis).toLocaleDateString('en-GB').split('/').reverse().join('')
+    dateanticiperecolte = new Date(request.body.dateanticiperecolte).toLocaleDateString('en-GB').split('/').reverse().join('')
+    agriculteur = request.body.agriculteur
+    plante = request.body.plante
+
+    client.query(`INSERT INTO "LL"."projet" (nom, etat, pays, region, superficie, localisation, datecontact, datesemi, dateanticipederecolte, agriculteur, plante)
+        VALUES ('${nom}', '${etat}', '${pays}', '${region}', ${superficie}, '${localisation}', TO_DATE('${datecontact}', 'YYYYMMDD'), TO_DATE('${datesemis}', 'YYYYMMDD'), TO_DATE('${dateanticiperecolte}', 'YYYYMMDD'), ${agriculteur}, ${plante})`, (err, res) => {
+        if (res) {
+            response.end('project saved successfully')
         } else {
             response.end(err)
         }
@@ -104,6 +127,36 @@ app.post('/updatePlant', (request, response) => {
     client.query(`UPDATE "LL"."plante" SET nom = '${nom}', periodicite = '${periodicite}', type_de_semence = '${type_de_semence}' WHERE id = '${id}'`, (err, res) => {
         if (res) {
             response.end('Plant updated')
+        } else {
+            response.end(err)
+        }
+    })
+})
+
+app.post('/updateProject', (request, response) => {
+
+    id = request.body.id
+    nom = request.body.nom
+    etat = request.body.etat
+    pays = request.body.pays
+    region = request.body.region
+    superficie = request.body.superficie
+    localisation = request.body.localisation
+    datecontact = new Date(request.body.datecontact).toLocaleDateString('en-GB').split('/').reverse().join('')
+    datesemis = new Date(request.body.datesemis).toLocaleDateString('en-GB').split('/').reverse().join('')
+    dateanticiperecolte = new Date(request.body.dateanticiperecolte).toLocaleDateString('en-GB').split('/').reverse().join('')
+    agriculteur = request.body.agriculteur
+    plante = request.body.plante
+
+
+    client.query(`UPDATE "LL"."projet" SET nom = '${nom}', etat = '${etat}',
+ pays = '${pays}', region = '${region}', superficie = ${superficie},
+  localisation = '${localisation}', datecontact = TO_DATE('${datecontact}', 'YYYYMMDD'),
+   datesemi = TO_DATE('${datecontact}', 'YYYYMMDD'),
+    dateanticipederecolte = TO_DATE('${datecontact}', 'YYYYMMDD'),
+     agriculteur = ${agriculteur}, plante = ${plante} WHERE id = '${id}'`, (err, res) => {
+        if (res) {
+            response.end('Project updated')
         } else {
             response.end(err)
         }
@@ -137,6 +190,17 @@ app.get('/deletePlant/:id', (request, response) => {
     client.query(`DELETE FROM "LL"."plante" WHERE id = ${request.params.id}`, (err, res) => {
         if (res) {
             response.end('Plant deleted')
+        } else {
+            response.end(err)
+        }
+    })
+})
+
+app.get('/deleteProject/:id', (request, response) => {
+
+    client.query(`DELETE FROM "LL"."projet" WHERE id = ${request.params.id}`, (err, res) => {
+        if (res) {
+            response.end('Project deleted')
         } else {
             response.end(err)
         }
